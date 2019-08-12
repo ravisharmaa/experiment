@@ -1,0 +1,447 @@
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+}
+.dashboard_graph {
+    background: #fff;
+    padding: 7px 10px;
+}
+.x_panel {
+    width: 100%;
+    padding: 10px 15px;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #E6E9ED;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    column-break-inside: avoid;
+    opacity: 1;
+    border-radius: 4px;
+}
+.x_panel, .x_title {
+    margin-bottom: 25px;
+}
+.degrees:after, .x_content, .x_panel {
+    position: relative;
+}
+.dashboard_graph .x_title {
+    padding: 5px 5px 7px;
+}
+.x_panel .x_flat_title{
+    margin-top: -10px;
+    padding: 12px 10px;
+    background-color: #fafafa;
+    border-radius: 4px 4px 0px 0px;
+}
+.dashboard_graph .x_title h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+}
+.x_title {
+    padding: 0;
+}
+.x_title h2 {
+    margin: 0 0 6px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+}
+.x_content {
+    padding: 0 5px 6px;
+    float: left;
+    clear: both;
+    margin-top: 5px;
+}
+.x_content, table.tile td ul li a, table.tile_info {
+    width: 100%;
+}
+/* ======================================================== */
+/* BUTTONS */
+/* ======================================================== */
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none;
+    outline-offset: -2px;
+}
+.btn.active, .btn:active {
+    color: #fff;
+}
+/* ======================================================== */
+/* Accordion panel */
+/* ======================================================== */
+.panel-group > .x_panel {
+    padding-bottom: 0;
+}
+.panel-group .x_panel .x_title{
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+.panel-group .x_panel .x_title .panel-title{
+    padding: 0px 10px;
+}
+.panel-group .x_panel .x_content, .panel-group .x_panel .x_content .panel-body{
+    padding: 0px;
+    border: none;
+    margin: 0;
+}
+.panel-group .x_panel .x_content .panel-body{
+    padding: 15px 0;
+}
+/* ======================================================== */
+/* Labels */
+/* ======================================================== */
+.label{
+    border-radius: 40px;
+    padding:4px 10px;
+    font-weight: 400;
+}
+.label--yellow{
+    background-color: #ffab00;
+}
+.label--danger{
+    background-color: #f46161;
+}
+.label--active{
+    background-color:#00965e;
+}
+/* ======================================================== */
+/* Table */
+/* ======================================================== */
+.tablePanel--wrapper{
+    border-radius: 4px;
+    background-color: #ffffff;
+    padding: 10px 0 20px 0;
+}
+.tablePanel{
+    margin: 0;
+    line-height: 1.5;
+    border: none;
+}
+.tablePanel thead, .tablePanel thead tr{
+    width: 100%;
+}
+.tablePanel thead tr > th,.tablePanel tbody tr td{
+    border: none;
+    padding: 20px 15px;
+}
+.tablePanel thead {
+    border-top: 1px solid #e9ebef;
+    border-bottom: 1px solid #e9ebef;
+    background-color: #f3f3f3;
+}
+.tablePanel thead tr > th{
+    white-space: normal;
+    border-bottom: 1px solid #f4f4f4;
+    font-weight: 600;
+    font-size: 15px;
+    padding:22px 15px;
+}
+.tablePanel td{
+    padding: 0.5em;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0px;
+    white-space: nowrap;
+    border: none;
+}
+.tablePanel tr {
+    width: 100%;
+}
+.tablePanel--wrapper.x_panel .x_flat_title {
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    padding: 12px 0px;
+}
+/* If s.n number */
+
+.tablePanel thead tr > th:first-child,.tablePanel >tbody tr > td:first-child{
+    width: 100px;
+}
+.tablePanel thead tr > th:last-child >*, 
+.tablePanel >tbody tr > td:last-child>*, 
+.tablePanel >tbody tr > td:last-child>*>*{
+    display: inline-block;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+/* ============================================ */
+/* Forms elements and Buttons */
+/* ============================================ */
+.btn {
+    display: inline-block;
+    padding: 10px 35px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    outline: none;
+}
+.btn--primary,.btn-primary{
+    opacity: 0.9;
+    background-color: #00965e;
+    background-image: linear-gradient(to right, #00965e 0%, #03ad6d 50%, #92d868 100%);
+    color: #fff;
+    border: none;
+}
+.btn--primary:hover{ 
+    color: #fff;
+    opacity:1; 
+}
+.btn--small{
+    padding: 6px 12px;
+    font-size: 12px;
+}
+.btn--large{
+    padding: 15px 35px;
+    min-width: 200px;
+}
+.btn--plainText{
+    border:none;
+    background-color: transparent;
+    font-weight:normal;
+    font-size: 16px;
+    margin:0 10px;
+}
+.text--danger{
+    color: #f46161;
+}
+.text--warning{
+    color: #f9ae4b;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: 38px;
+    padding: 10px 15px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #686E73;
+    background-color: #f6f9f6;
+    background-image: none;
+    border: 1px solid #cdd8cd;
+    border-radius: 4px;
+    box-shadow: none;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.form-group label {
+    font-weight: 600;
+    font-size: 13px;
+}
+.form-group .form-control{
+    font-size: 13px;
+    color: #686E73;
+    font-weight: 300;
+    border-color: #E6E9ED;
+    height: 38px;
+}
+/* ========Check box ============= */
+.styled-checkbox {
+    position: absolute;
+    opacity: 0;
+  }
+  .styled-checkbox + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+  .styled-checkbox + label:before {
+    content: "";
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: #d8d8d8;
+    border-radius:4px;
+  }
+  .styled-checkbox:hover + label:before {
+    background: #00965e;
+  }
+  .styled-checkbox:focus + label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+  }
+  .styled-checkbox:checked + label:before {
+    background: #45b289;
+  }
+  .styled-checkbox:disabled + label {
+    color: #b8b8b8;
+    cursor: auto;
+  }
+  .styled-checkbox:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+  }
+  .styled-checkbox:checked + label:after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    background: white;
+    width: 2px;
+    height: 2px;
+    box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+  }
+/* ======================================================== */
+/* Progress bar*/
+/* ======================================================== */
+.progress{
+    box-shadow: none;
+    border-radius: 30px;
+    background-color: #b1b1b1;
+    border-radius: 4px;
+}
+.progress-bar{
+    background-color: #4290e2;
+    border-radius: 30px;
+    box-shadow: none;
+    border-radius: 4px;
+}
+/* ======================================================== */
+/* Modal*/
+/* ======================================================== */
+.modal{
+    background-color: rgba(52, 56, 60, 0.65);
+}
+.modal .modal-dialog .modal-content{
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0px 14px 20px rgba(0,0,0,0.12);
+}
+.modal .modal-dialog .modal-content .modal-header{
+    background-color: #34383c;
+    border-radius: 6px 6px 0px 0px;
+    color: #fff;
+}
+.modal .modal-dialog .modal-content .modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+}
+.modal .modal-dialog .modal-content .modal-header .close{
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #3fb388;
+    margin: -50px -30px;
+    opacity: 1;
+}
+.modal-dialog {
+    margin: 80px auto;
+}
+/* ======================================================== */
+/* Pophover*/
+/* ======================================================== */
+.popover {
+    border: none;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.26);
+}
+
+
+/* ======================================================== */
+/* Resize: Responsive */
+/* ======================================================== */
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+
+}
+
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    .tablePanel{
+        display: flex;
+        flex-flow: column nowrap;
+        margin: 0;
+        line-height: 1.5;
+        border: none;
+        flex: 1 1 auto;
+    }
+    .tablePanel thead, .tablePanel thead tr{
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+    }
+    .tablePanel thead tr > th,.tablePanel tbody tr td{
+        border: none;
+        padding: 20px 15px;
+    }
+    .tablePanel thead {
+        border-top: 1px solid #e9ebef;
+        border-bottom: 1px solid #e9ebef;
+        background-color: #f3f3f3;
+    }
+    .tablePanel thead tr > th{
+        white-space: normal;
+        justify-content: center;
+        flex: 1 1 0;
+        border-bottom: 1px solid #f4f4f4;
+        font-weight: 600;
+        font-size: 15px;
+        padding:22px 15px;
+    }
+    .tablePanel td{
+        display: flex;
+        flex-flow: row nowrap;
+        flex-grow: 1;
+        flex-basis: 0;
+        padding: 0.5em;
+        word-break: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0px;
+        white-space: nowrap;
+        border: none;
+    }
+    .tablePanel tr {
+        width: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+    }
+    .tablePanel--wrapper.x_panel .x_flat_title {
+        margin-right: 0;
+        margin-left: 0;
+        margin-bottom: 0;
+        padding: 12px 0px;
+    }
+    /* If s.n number */
+    
+    .tablePanel thead tr > th:first-child,.tablePanel >tbody tr > td:first-child{
+        flex-grow: 0;
+        width: 50px;
+        flex-basis: auto;
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+
+}

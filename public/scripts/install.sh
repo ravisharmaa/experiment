@@ -1,0 +1,83 @@
+#!/bin/sh
+REPLY="n"
+DIR="/scripts/jvrscripts"
+DIR_CSV="${DIR}/csv"
+PACKAGE_NAME="sshpass"
+
+read -p "Please procced only if you have all detail including username and urls? (y/n)" yn
+if [ "$yn" = "Y" ] || [ "$yn" = "y" ]; then
+
+	echo "Proceeding for installing scripts for monitoring your server"
+else
+	exit 1
+fi
+
+if rpm -q $PACKAGE_NAME | grep "not installed" > /dev/null ; then
+  read -p "$PACKAGE_NAME Command not found! Install? (y/n)" yesno
+   if [ "$yesno" = "Y" ] || [ "$yesno" = "y" ]; then
+        if cat /etc/*release |  grep CentOS; then
+                echo "==============================================="
+                echo "Installing packages $PACKAGE_NAME on CentOS"
+                echo "==============================================="
+                yum install -y $PACKAGE_NAME
+                yum install -y wget
+        elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+                echo "==============================================="
+                echo "Installing packages $PACKAGE_NAME on Ubuntu"
+                echo "==============================================="
+                apt-get update
+                 apt-get install -y $PACKAGE_NAME
+                 apt-get install -y wget
+        else
+                echo "OS NOT DETECTED, couldn't install package $PACKAGE_NAME"
+        fi
+   fi
+else
+	echo "$PACKAGE_NAME already exits"
+fi
+
+
+
+
+  read -p "Username:-" USERNAME 
+  read -p "Password:-" PWD 
+
+
+sshpass -p $PWD ssh -q  -o ConnectTimeout=10 $USERNAME@10.0.1.8  exit
+if [ $? -ne 0 ]
+then
+  # Do stuff here if example.com SSH is down
+  echo 'Can not connect to 10.0.1.8'
+  exit 
+fi
+
+
+if [ -d $DIR ] || [ -d $DIR_CSV ] 
+then
+	echo "$DIR already exits" 
+else
+
+        /bin/mkdir -p ${DIR_CSV}
+fi
+
+read -p "paste the full url link ie (https://monitoring.javra.com/storage/files/shaper_montoring.sh):-" WEBLINK 
+mv $DIR/$WEBLINK $DIR/$WEBLINK.bak
+wget -O $DIR --no-check-certificate $WEBLINK 
+
+echo $WEBLINK
+B="$(echo $WEBLINK | cut -d'_' -f1)"
+NAMEHOST="$(echo $B | cut -d'/' -f5)"
+echo $NAMEHOST
+
+mv $DIR/rsync.sh $DIR/rsync.sh.bak
+wget -O $DIR/rsync.sh --no-check-certificate  https://monitoring.javra.com/storage/files/rsync.sh
+if [ "$?" != "0" ]; then
+   echo "Error downloading rsync.sh file from shaper : ($?), exiting..."
+   exit 1
+fi
+#sed -i -e 's/passworddefault/$PWD/g' < $DIR/rsync1.sh > $DIR/rsync2.sh
+cat $DIR/rsync.sh |sed s/scriptfiledefault/$NAMEHOST/ |sed s/hostnamedefault/$NAMEHOST/ |sed s/usernamedefault/$USERNAME/ | sed s/passworddefault/$PWD/ > $DIR/rsync1.sh
+mv $DIR/rsync.sh $DIR/rsync.sh.bak
+mv $DIR/rsync1.sh $DIR/rsync.sh
+chmod 744 $DIR/rsync.sh
+

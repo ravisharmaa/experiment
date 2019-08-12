@@ -1,0 +1,151 @@
+#!/bin/sh
+REPLY="n"
+DIR="/scripts/jvrscripts"
+DIR_CSV="${DIR}/csv"
+PACKAGE_NAME="sshpass"
+FILENAME="/etc/crontab"
+DATE_N_TIME=`date +%Y-%m-%d_%H-%M-%S`
+
+read -p "Please procced only if you have all detail including username and urls? (y/n)" yn
+if [ "$yn" = "Y" ] || [ "$yn" = "y" ]; then
+
+	echo "Proceeding for installing scripts for monitoring your server"
+else
+	exit 1
+fi
+
+
+###start installing packages needed ###
+if rpm -q $PACKAGE_NAME | grep "not installed" > /dev/null ; then
+  read -p "$PACKAGE_NAME Command not found! Install? (y/n)" yesno
+   if [ "$yesno" = "Y" ] || [ "$yesno" = "y" ]; then
+        if cat /etc/*release |  grep CentOS; then
+                echo "==============================================="
+                echo "Installing packages $PACKAGE_NAME on CentOS"
+                echo "==============================================="
+		yum install epel-release
+                yum install -y rsync cronie $PACKAGE_NAME
+        elif cat /etc/*release | grep ^NAME | grep Ubuntu; then
+                echo "==============================================="
+                echo "Installing packages $PACKAGE_NAME on Ubuntu"
+                echo "==============================================="
+                apt-get update
+                 apt-get install -y rsync cronie $PACKAGE_NAME
+        else
+                echo "OS NOT DETECTED, couldn't install package $PACKAGE_NAME"
+        fi
+   fi
+else
+	echo "$PACKAGE_NAME already exits"
+fi
+###End of package###
+
+###testing ssh password in server####
+
+  read -p "Username:-" USERNAME 
+  read -s -p "Password:-" PWD 
+
+#sshpass -p $PWD ssh -o ConnectTimeout=10 -p 22 ${USERNAME}@monitoring.javra.com exit
+sshpass -p $PWD ssh -o StrictHostKeyChecking=no -p 2019  ${USERNAME}@monitoring.javra.com exit
+if [ $? -ne 0 ]
+then
+  # Do stuff here if example.com SSH is down
+  echo 'Can not connect to monitoring server '
+  exit 
+fi
+###end of ssh check####
+
+###Directory check###
+if [ -d $DIR ] || [ -d $DIR_CSV ] 
+then
+####update script if already exits###
+	read -p "Do you want to update scripts (y/n)" yn
+	if [ "$yn" = "Y" ] || [ "$yn" = "y" ]; then
+
+	echo "Update the script from server"
+	### download files from server###
+	read -p " URL link ie (https://monitoring.javra.com/home/shaper/xyz.txt):-" WEBLINK
+	B="$(echo $WEBLINK | cut -d'_' -f1)"
+	NAMEHOST="$(echo $B | cut -d'/' -f6)"
+
+	mv $DIR/${NAMEHOST}_monitor.txt $DIR/${NAMEHOST}_monitor.txt.bak.$DATE_N_TIME
+	mv $DIR/${NAMEHOST}_monitor.sh $DIR/${NAMEHOST}_monitor.sh.bak.$DATE_N_TIME
+	wget -P $DIR --no-check-certificate $WEBLINK
+	mv $DIR/${NAMEHOST}_monitor.txt $DIR/${NAMEHOST}_monitor.sh
+	chmod 740 $DIR/${NAMEHOST}_monitor.sh
+
+	mv $DIR/rsync.sh $DIR/rsync.sh.bak.$DATE_N_TIME
+	wget -O $DIR/rsync.sh --no-check-certificate  https://monitoring.javra.com/scripts/rsync.txt
+	if [ "$?" != "0" ]; then
+	   echo "Error downloading rsync.sh file from shaper : ($?), exiting..."
+	   exit 1
+	fi
+
+	cat $DIR/rsync.sh |sed s/scriptfiledefault/$NAMEHOST/ |sed s/hostnamedefault/$NAMEHOST/ |sed s/usernamedefault/$USERNAME/ | sed s/passworddefault/$PWD/ > $DIR/rsync1.sh
+	mv $DIR/rsync.sh $DIR/rsync.sh.bak.$DATE_N_TIME
+	mv $DIR/rsync1.sh $DIR/rsync.sh
+	chmod 740 $DIR/rsync.sh
+	###END of Download files###
+	###crontab###
+	if grep -q "$DIR/rsync.sh" $FILENAME
+	then
+		echo "rsync already added"
+	else
+		echo "rsync  will be added for every 5 min"
+		##crontab
+		echo "*/5 * * * * root $DIR/rsync.sh 2>&1 > /dev/null " >> /etc/crontab
+	fi
+	###END OF crontab###
+
+	else
+		exit 1
+	fi
+
+####end of update script###
+	exit 1
+else
+
+        /bin/mkdir -p ${DIR_CSV}
+fi
+###end of Directory###
+
+### download files from server###
+read -p " URL link ie (https://monitoring.javra.com/home/shaper/xyz.txt):-" WEBLINK
+
+B="$(echo $WEBLINK | cut -d'_' -f1)"
+NAMEHOST="$(echo $B | cut -d'/' -f6)"
+
+wget -P $DIR --no-check-certificate $WEBLINK
+if [ "$?" != "0" ]; then
+   echo "Error downloading scripts files from server : ($?), exiting..."
+   exit 1
+fi
+mv $DIR/${NAMEHOST}_monitor.txt $DIR/${NAMEHOST}_monitor.sh
+chmod 740 $DIR/${NAMEHOST}_monitor.sh
+
+#mv $DIR/rsync.sh $DIR/rsync.sh.bak
+wget -O $DIR/rsync.sh --no-check-certificate  https://monitoring.javra.com/scripts/rsync.txt
+if [ "$?" != "0" ]; then
+   echo "Error downloading rsync.sh file from server : ($?), exiting..."
+   exit 1
+fi
+
+cat $DIR/rsync.sh |sed s/scriptfiledefault/$NAMEHOST/ |sed s/hostnamedefault/$NAMEHOST/ |sed s/usernamedefault/$USERNAME/ | sed s/passworddefault/$PWD/ > $DIR/rsync1.sh
+mv $DIR/rsync1.sh $DIR/rsync.sh
+chmod 740 $DIR/rsync.sh
+###END of Download files###
+
+###crontab###
+if grep -q "$DIR/rsync.sh" $FILENAME
+then
+	echo "rsync already added"
+else
+	echo "rsync  will be added for every 5 min"
+	##crontab
+	echo "*/5 * * * * root $DIR/rsync.sh 2>&1 > /dev/null " >> /etc/crontab
+fi
+###END OF crontab###
+
+###END OF all scripts####
+
+

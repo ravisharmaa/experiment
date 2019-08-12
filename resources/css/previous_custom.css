@@ -1,0 +1,29 @@
+.centered{text-align: center;}
+.graphTitle{margin-bottom: 50px;
+    color: #333333;
+    font-size: 20px;
+    font-weight: Bold;
+    fill: #333333;
+    text-align: center;}
+.graphBlock{margin-bottom: 50px;}
+.headerIP{ float: right;}
+.systemUpTime{ float: right;}
+.indicator{ text-align: center; margin-top: 20px;}
+.indicator ul{ list-style: none;
+    border: 2px solid #ccc;
+    padding: 10px;
+    display: inline;}
+.indicator ul li{ display: inline-block; margin: 0 20px;}
+.indicator ul li::before{ content: " "; margin-right: 10px; padding: 0 8px; }
+.indicator ul li.free::before{ background-color: #ff7f00;}
+.indicator ul li.used::before{ background-color: #337ab7;}
+.indicator ul li.free{}
+.indicator ul li.used{}
+a.router-link-active {
+    font-weight: 700;
+}
+h1.sitetitle{    float: left;
+    color: #fff;
+    font-size: 22px;
+    margin: 14px 0 0px 20px;}
+

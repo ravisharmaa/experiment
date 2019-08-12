@@ -1,0 +1,73 @@
+<template>
+  <div>
+         <apexchart type="line" height="350" :options="chartOptions" :series="series"/>
+    </div>
+
+</template>
+
+<script>
+import VueApexCharts from "vue-apexcharts";
+export default {
+  name: "SingleChart",
+  props: ["status", "attributes", "createdAt"],
+  components: {
+    apexchart: VueApexCharts
+  },
+  data() {
+    return {
+      trends: [],
+      series: [],
+      attribute: [],
+      chartOptions: {
+        chart: {
+          height: 10,
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        title: {
+          text: this.attributes[0].toUpperCase() + this.attributes.slice(1),
+          align: "left"
+        },
+        grid: {
+          row: {
+            colors: ["#f4f4f8", "transparent"], // takes an array which will be repeated on columns
+            opacity: 0.5
+          }
+        },
+        xaxis: {
+
+          categories: this.createdAt
+        },
+        yaxis: {
+                title: {
+                    text: 'Service Status',
+                    style: {"color": "#686E73", "fontSize": "16px"},
+                },
+                tickAmount: 1,
+                min: 0 ,
+                max: 1
+                },
+        colors: ["#00965e"]
+      }
+    };
+  },
+
+  mounted() {
+    if(this.attributes !== "date") {
+      this.series.push({
+        name: this.attributes,
+        data: this.status
+      });
+    }
+
+
+  }
+};
+</script>
+
+<style>
+</style>

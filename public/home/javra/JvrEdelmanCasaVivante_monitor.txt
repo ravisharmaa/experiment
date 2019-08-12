@@ -1,0 +1,15 @@
+#! /bin/bash 
+DATE_N_TIME=`date +%Y-%m-%d_%H-%M-%S`
+echo "Hostname,IpAddress,SystemUptime,MemTotal,MemFree,LoadAverage,dev-mapper-centos-root_DiskTotal,dev-mapper-centos-root_DiskUsed,dev-sdb1_DiskTotal,dev-sdb1_DiskUsed,httpd,mysqld"> /scripts/jvrscripts/csv/JvrEdelmanCasaVivante_$DATE_N_TIME.csv
+ echo	"JvrEdelmanCasaVivante","10.0.1.213",\
+		$(uptime | awk -F'( |,|:)+' '{print $6 $7":"$8"hours:"$9"minutes"}')','\
+		$(cat /proc/meminfo |grep "MemTotal" |awk '{print $2/1024/1024}')','\
+		$(cat /proc/meminfo |grep "MemFree"|awk '{print $2/1024/1024}')','\
+		$(uptime | awk -F"," '{print $4}' |cut -f2 -d:)','\
+		$(df -h /dev/mapper/centos-root|grep -vE '^Filesystem|tempfs'|awk '{ print $2}')','\
+		$(df -h /dev/mapper/centos-root|grep -vE '^Filesystem|tempfs'|awk '{ print $3 }')','\
+		$(df -h /dev/sdb1|grep -vE '^Filesystem|tempfs'|awk '{ print $2}')','\
+		$(df -h /dev/sdb1|grep -vE '^Filesystem|tempfs'|awk '{ print $3 }')','\
+		$((echo >/dev/tcp/localhost/80) &>/dev/null && echo "open"|| echo "closed")','\
+		$((echo >/dev/tcp/localhost/3306) &>/dev/null && echo "open"|| echo "closed")\
+		>>/scripts/jvrscripts/csv/JvrEdelmanCasaVivante_$DATE_N_TIME.csv
