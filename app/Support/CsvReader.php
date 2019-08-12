@@ -41,7 +41,6 @@ class CsvReader
             if ('csv' !== $file->getExtension()) {
                 continue;
             }
-
             $this->parsedData[] = Reader::createFromPath($filename)->setHeaderOffset(0);
             File::delete($filename);
         }
@@ -49,7 +48,6 @@ class CsvReader
         if (empty($this->parsedData)) {
             throw new FileNotFoundException();
         }
-
         $this->parse();
     }
 

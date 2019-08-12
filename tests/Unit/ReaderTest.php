@@ -4,6 +4,8 @@ namespace Tests\Unit;
 
 use App\Support\CsvReader;
 use Illuminate\Filesystem\Filesystem;
+use Mockery;
+use RecursiveDirectoryIterator;
 use Tests\TestCase;
 
 class ReaderTest extends TestCase
@@ -12,15 +14,19 @@ class ReaderTest extends TestCase
 
     protected function setUp()
     {
-        $this->tempDir = __DIR__.'/tmp/';
+        $this->tempDir = __DIR__.'/tmp';
         mkdir($this->tempDir);
+
+        parent::setUp();
     }
 
     protected function tearDown()
     {
-        \Mockery::close();
+        Mockery::close();
         $files = new Filesystem();
-        $files->deleteDirectories($this->tempDir);
+        $files->deleteDirectory($this->tempDir);
+
+        parent::tearDown();
     }
 
     /**
@@ -29,22 +35,49 @@ class ReaderTest extends TestCase
      */
     public function it_throws_exception_if_csv_not_found()
     {
-        $directoryIterator = new \RecursiveDirectoryIterator($this->tempDir);
+        $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
         $csvReader = new CsvReader($directoryIterator);
 
         $csvReader->import();
 
-        $this->assertFileNotExists( $this->tempDir.'/temp.csv');
+        $this->assertFileNotExists($this->tempDir.'/temp.csv');
     }
 
     /**
      * @test
-     * @expectedException \League\Csv\Exception
+     * @expectedException \Exception
      */
     public function it_throws_exception_if_csv_is_ill_formed()
     {
+        file_put_contents($this->tempDir.'/file1.csv', '');
+        $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
+        $csvReader = new CsvReader($directoryIterator);
 
+        $csvReader->import();
     }
+
+    /**
+     * @test
+     */
+
+    public function it_removes_the_csv_file_after_parsing()
+    {
+        file_put_contents($this->tempDir.'/file1.csv', 'Hello, World');
+
+        $this->assertDirectoryExists($this->tempDir);
+        $this->assertFileExists($this->tempDir.'/file1.csv');
+
+       $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
+
+        $csvReader = new CsvReader($directoryIterator);
+
+        $csvReader->import();
+
+
+        $this->assertFileNotExists($this->tempDir.'/file1.csv');
+    }
+
+
 
 
 }
