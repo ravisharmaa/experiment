@@ -12,17 +12,21 @@ class ReaderTest extends TestCase
 {
     private $tempDir;
 
+    private $directoryIterator;
+
+    private $csvReader;
+
     protected function setUp()
     {
         $this->tempDir = __DIR__.'/tmp';
         mkdir($this->tempDir);
-
+        $this->directoryIterator =  new RecursiveDirectoryIterator($this->tempDir);
+        $this->csvReader = new CsvReader($this->directoryIterator);
         parent::setUp();
     }
 
     protected function tearDown()
     {
-        Mockery::close();
         $files = new Filesystem();
         $files->deleteDirectory($this->tempDir);
 
@@ -35,10 +39,7 @@ class ReaderTest extends TestCase
      */
     public function it_throws_exception_if_csv_not_found()
     {
-        $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
-        $csvReader = new CsvReader($directoryIterator);
-
-        $csvReader->import();
+        $this->csvReader->import();
 
         $this->assertFileNotExists($this->tempDir.'/temp.csv');
     }
@@ -50,10 +51,7 @@ class ReaderTest extends TestCase
     public function it_throws_exception_if_csv_is_ill_formed()
     {
         file_put_contents($this->tempDir.'/file1.csv', '');
-        $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
-        $csvReader = new CsvReader($directoryIterator);
-
-        $csvReader->import();
+        $this->csvReader->import();
     }
 
     /**
@@ -67,11 +65,7 @@ class ReaderTest extends TestCase
         $this->assertDirectoryExists($this->tempDir);
         $this->assertFileExists($this->tempDir.'/file1.csv');
 
-       $directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
-
-        $csvReader = new CsvReader($directoryIterator);
-
-        $csvReader->import();
+        $this->csvReader->import();
 
 
         $this->assertFileNotExists($this->tempDir.'/file1.csv');
