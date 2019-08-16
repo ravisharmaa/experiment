@@ -33,6 +33,7 @@ class CsvReader
 
     /**
      * Imports the csv and parses them.
+     *
      * @throws FileNotFoundException
      */
     public function import()

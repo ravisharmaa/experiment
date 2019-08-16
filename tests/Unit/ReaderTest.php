@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Support\CsvReader;
 use Illuminate\Filesystem\Filesystem;
-use Mockery;
 use RecursiveDirectoryIterator;
 use Tests\TestCase;
 
@@ -20,7 +19,7 @@ class ReaderTest extends TestCase
     {
         $this->tempDir = __DIR__.'/tmp';
         mkdir($this->tempDir);
-        $this->directoryIterator =  new RecursiveDirectoryIterator($this->tempDir);
+        $this->directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
         $this->csvReader = new CsvReader($this->directoryIterator);
         parent::setUp();
     }
@@ -57,7 +56,6 @@ class ReaderTest extends TestCase
     /**
      * @test
      */
-
     public function it_removes_the_csv_file_after_parsing()
     {
         file_put_contents($this->tempDir.'/file1.csv', 'Hello, World');
@@ -67,11 +65,6 @@ class ReaderTest extends TestCase
 
         $this->csvReader->import();
 
-
         $this->assertFileNotExists($this->tempDir.'/file1.csv');
     }
-
-
-
-
 }
