@@ -19,9 +19,6 @@ storage/hkpp/*
 storage/gip/*
 storage/shaper/*
 storage/debugbar/*
-storage/framework/*
-storage/framework/sessions/*
-storage/framework/views/*
 package.json
 package.json.mac
 package.json.linux
