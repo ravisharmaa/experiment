@@ -61,6 +61,7 @@ class ReaderTest extends TestCase
         file_put_contents($this->tempDir.'/file1.csv', 'Hello, World');
 
         $this->assertDirectoryExists($this->tempDir);
+
         $this->assertFileExists($this->tempDir.'/file1.csv');
 
         $this->csvReader->import();

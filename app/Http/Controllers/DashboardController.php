@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entity;
 use App\EntityCustomer;
 use App\Server;
-use App\User;
 
 class DashboardController extends Controller
 {
@@ -19,11 +18,10 @@ class DashboardController extends Controller
         if (auth()->user()->isAdmin()) {
             $servers = Server::select('hostname', 'ipaddress', 'id', 'customer_id')->withLatestValue()->paginate(10);
         } else {
-            if (auth()->user()->customer) {
-                $servers = auth()->user()->customer->servers()->withLatestValue()->get();
-            } else {
+            if (!auth()->user()->customer()->exists()) {
                 abort(404);
             }
+            $servers = auth()->user()->customer->servers()->withLatestValue()->get();
         }
 
         return view('dashboard.index', compact('servers'));
