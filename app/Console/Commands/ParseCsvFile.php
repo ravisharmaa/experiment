@@ -27,12 +27,13 @@ class ParseCsvFile extends Command
     {
         try {
             $parsedData = app(CsvReader::class)->import();
+
             foreach ($parsedData as $data) {
-                collect($data)->map(function ($csvData) {
+                foreach ($data as $csvData) {
                     Log::info('Retrieved the data', $csvData);
                     $server = Server::whereIn('hostname', [$csvData['hostname']])->first();
                     if (!$server) {
-                        return false;
+                        continue;
                     }
                     unset($csvData['hostname']);
                     unset($csvData['ipaddress']);
@@ -42,12 +43,12 @@ class ParseCsvFile extends Command
                     ]);
 
                     Log::info('Saved the exported Data');
-                });
+                    $this->info("Csv Parsed Successfully");
+                }
             }
-
-            $this->info('Csv Parsed Successfully');
         } catch (\Exception $e) {
-            $this->info($e->getMessage());
+            $this->info('Could not parse Csv');
+            dd($e->getMessage());
         }
     }
 }

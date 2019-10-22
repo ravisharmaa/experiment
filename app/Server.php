@@ -135,22 +135,6 @@ class Server extends Model
     }
 
     /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function getServer($id)
-    {
-        $server = DB::table('services')
-            ->join('servers', 'services.id', '=', 'servers.service_id')
-            ->where('servers.service_id', '=', $id)
-            ->select('servers.*')
-            ->get();
-
-        return $server;
-    }
-
-    /**
      * @return string
      */
     public function getRouteKeyName()

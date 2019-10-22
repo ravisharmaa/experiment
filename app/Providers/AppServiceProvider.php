@@ -7,6 +7,7 @@ use App\Support\CsvReader;
 use App\Value;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use League\Csv\Statement;
 use RecursiveIteratorIterator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        Value::observe(ValuesObserver::class);
+       // Value::observe(ValuesObserver::class);
 
         Builder::macro('addSubSelect', function ($column, $query) {
 
@@ -41,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(CsvReader::class, function() {
-           return new CsvReader(new \RecursiveDirectoryIterator(public_path('home')));
+           return new CsvReader(new \RecursiveDirectoryIterator(public_path('home')), new Statement());
         });
     }
 }

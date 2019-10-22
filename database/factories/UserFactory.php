@@ -36,17 +36,20 @@ $factory->define(App\Customer::class, function (Faker $faker) {
 
 $factory->define(App\Server::class, function (Faker $faker) {
     return [
-     'hostname' => $faker->url,
-     'ipaddress' => $faker->localIpv4,
-   ];
+        'hostname' => $faker->url,
+        'ipaddress' => $faker->localIpv4,
+        'customer_id' => function () {
+            return factory(App\Customer::class)->create()->id;
+        },
+    ];
 });
 
 $factory->state(App\Server::class, 'specific_host_for_csv', function () {
     return [
-     'customer_id' => function () {
-         return factory(App\Customer::class)->create()->id;
-     },
-     'hostname' => 'example.com',
-     'ipaddress' => '1.1.1.1',
-   ];
+        'customer_id' => function () {
+            return factory(App\Customer::class)->create()->id;
+        },
+        'hostname' => 'example.com',
+        'ipaddress' => '1.1.1.1',
+    ];
 });

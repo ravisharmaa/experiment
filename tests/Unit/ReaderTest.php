@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Support\CsvReader;
 use Illuminate\Filesystem\Filesystem;
+use League\Csv\Statement;
 use RecursiveDirectoryIterator;
 use Tests\TestCase;
 
@@ -11,16 +12,28 @@ class ReaderTest extends TestCase
 {
     private $tempDir;
 
+    /**
+     * @var RecursiveDirectoryIterator
+     */
     private $directoryIterator;
 
+    /**
+     * @var CsvReader
+     */
     private $csvReader;
+
+    /**
+     * @var Statement
+     */
+    private $statement;
 
     protected function setUp()
     {
         $this->tempDir = __DIR__.'/tmp';
         mkdir($this->tempDir);
         $this->directoryIterator = new RecursiveDirectoryIterator($this->tempDir);
-        $this->csvReader = new CsvReader($this->directoryIterator);
+        $this->statement = new Statement();
+        $this->csvReader = new CsvReader($this->directoryIterator, $this->statement);
         parent::setUp();
     }
 

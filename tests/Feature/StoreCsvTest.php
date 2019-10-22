@@ -42,6 +42,5 @@ class StoreCsvTest extends TestCase
         $this->assertSame('200days', $server->values()->first()->systemuptime);
 
         $this->assertFileNotExists(public_path('home/edelman/file.csv'));
-
     }
 }

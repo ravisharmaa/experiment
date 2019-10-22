@@ -2,11 +2,10 @@
 
 namespace App\Support;
 
-use App\Server;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use League\Csv\Reader;
+use League\Csv\Statement;
 use RecursiveIteratorIterator;
 
 class CsvReader
@@ -20,15 +19,21 @@ class CsvReader
      * @var array
      */
     protected $parsedData = [];
+    /**
+     * @var Statement
+     */
+    protected $statement;
 
     /**
      * CsvReader constructor.
      *
      * @param $recursiveDirectoryIterator
+     * @param $statement Statement
      */
-    public function __construct($recursiveDirectoryIterator)
+    public function __construct($recursiveDirectoryIterator, $statement)
     {
         $this->recursiveDirectoryIterator = $recursiveDirectoryIterator;
+        $this->statement = $statement;
     }
 
     /**
@@ -42,7 +47,9 @@ class CsvReader
             if ('csv' !== $file->getExtension()) {
                 continue;
             }
-            $this->parsedData[] = Reader::createFromPath($filename)->setHeaderOffset(0);
+
+            $this->parsedData[] = $this->statement->process(Reader::createFromPath($filename,'r')->setHeaderOffset(0));
+
             File::delete($filename);
         }
 
@@ -51,27 +58,5 @@ class CsvReader
         }
 
         return $this->parsedData;
-
     }
-
-   /* protected function parse(): void
-    {
-        foreach ($this->parsedData as $data) {
-            collect($data)->map(function ($csvData) {
-                Log::info('Retrieved the data', $csvData);
-                $server = Server::whereIn('hostname', [$csvData['hostname']])->first();
-                if ($server) {
-                    unset($csvData['hostname']);
-                    unset($csvData['ipaddress']);
-                    $value = $server->addValues($csvData);
-                    $value->server->update([
-                        'server_time' => $value->created_at,
-                    ]);
-                } else {
-                    return false;
-                }
-                Log::info('Saved the exported Data');
-            });
-        }
-    }*/
 }
