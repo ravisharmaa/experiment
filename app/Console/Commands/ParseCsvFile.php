@@ -47,8 +47,8 @@ class ParseCsvFile extends Command
                 }
             }
         } catch (\Exception $e) {
+             dd($e->getMessage());
             $this->info('Could not parse Csv');
-            dd($e->getMessage());
         }
     }
 }

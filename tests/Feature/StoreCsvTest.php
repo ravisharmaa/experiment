@@ -11,36 +11,37 @@ class StoreCsvTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * @param string $fileName
+     * @param array $data
+     */
+    protected function prepareCsvData(string $fileName, array $data ): void
+    {
+        $file = fopen(public_path("home/{$fileName}"), 'w');
+        fputcsv($file, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
+
+        foreach ($data as $row) {
+            fputcsv($file, $row);
+        }
+
+        fclose($file);
+    }
+
+    /**
      * @test
      */
     public function it_stores_csv_recursively_through_artisan_command()
     {
-
-        $fileOfServerA = fopen(public_path('home/edelman/server_a.csv'), 'w');
-        fputcsv($fileOfServerA, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
-
         $dataOfServerA = [
             ['example.com', '1.1.1.1', '200days', '1452', '5223'],
         ];
 
-        foreach ($dataOfServerA as $row) {
-            fputcsv($fileOfServerA, $row);
-        }
-
-        fclose($fileOfServerA);
-
-        $fileOfServerB = fopen(public_path('home/javra/server_b.csv'), 'w');
-        fputcsv($fileOfServerB, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
+        $this->prepareCsvData('edelman/server_a.csv', $dataOfServerA);
 
         $dataOfServerB = [
             ['server_b', '1.1.1.1', '205days', '1452', '5223'],
         ];
 
-        foreach ($dataOfServerB as $row) {
-            fputcsv($fileOfServerB, $row);
-        }
-
-        fclose($fileOfServerB);
+        $this->prepareCsvData('javra/server_b.csv', $dataOfServerB);
 
         $serverA = factory(Server::class)->state('specific_host_for_csv')->create();
 
