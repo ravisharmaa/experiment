@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-       // Value::observe(ValuesObserver::class);
+        Value::observe(ValuesObserver::class);
 
         Builder::macro('addSubSelect', function ($column, $query) {
 
