@@ -13,34 +13,57 @@ class StoreCsvTest extends TestCase
     /**
      * @test
      */
-    public function it_stores_csv_through_artisan_command()
+    public function it_stores_csv_recursively_through_artisan_command()
     {
 
-        $file = fopen(public_path('home/edelman/file.csv'), 'w');
-        fputcsv($file, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
+        $fileOfServerA = fopen(public_path('home/edelman/server_a.csv'), 'w');
+        fputcsv($fileOfServerA, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
 
-        $data = [
+        $dataOfServerA = [
             ['example.com', '1.1.1.1', '200days', '1452', '5223'],
         ];
 
-        foreach ($data as $row) {
-            fputcsv($file, $row);
+        foreach ($dataOfServerA as $row) {
+            fputcsv($fileOfServerA, $row);
         }
 
-        fclose($file);
+        fclose($fileOfServerA);
 
-        $server = factory(Server::class)->state('specific_host_for_csv')->create();
+        $fileOfServerB = fopen(public_path('home/javra/server_b.csv'), 'w');
+        fputcsv($fileOfServerB, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
+
+        $dataOfServerB = [
+            ['server_b', '1.1.1.1', '205days', '1452', '5223'],
+        ];
+
+        foreach ($dataOfServerB as $row) {
+            fputcsv($fileOfServerB, $row);
+        }
+
+        fclose($fileOfServerB);
+
+        $serverA = factory(Server::class)->state('specific_host_for_csv')->create();
+
+        $serverB = factory(Server::class)->create([
+             'hostname' => 'server_b',
+            'ipaddress' => '1.2.2.2'
+        ]);
 
         $this->artisan('parse:csv');
 
         $this->assertDatabaseHas('values', [
-           'server_id' => $server->id,
-            'memtotal' => $data[0][3]
+            'server_id' => $serverA->id,
+            'memtotal' => $dataOfServerA[0][3]
+        ]);
+
+        $this->assertDatabaseHas('values', [
+            'server_id' => $serverB->id,
+            'memtotal' => $dataOfServerB[0][3]
         ]);
 
 
-        $this->assertSame('200days', $server->values()->first()->systemuptime);
 
-        $this->assertFileNotExists(public_path('home/edelman/file.csv'));
+        $this->assertFileNotExists(public_path('home/edelman/server_a.csv'));
+        $this->assertFileNotExists(public_path('home/javra/server_b.csv'));
     }
 }
