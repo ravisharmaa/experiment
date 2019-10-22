@@ -49,10 +49,12 @@ class CsvReader
         if (empty($this->parsedData)) {
             throw new FileNotFoundException();
         }
-        $this->parse();
+
+        return $this->parsedData;
+
     }
 
-    protected function parse(): void
+   /* protected function parse(): void
     {
         foreach ($this->parsedData as $data) {
             collect($data)->map(function ($csvData) {
@@ -71,5 +73,5 @@ class CsvReader
                 Log::info('Saved the exported Data');
             });
         }
-    }
+    }*/
 }

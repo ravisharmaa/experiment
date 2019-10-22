@@ -42,7 +42,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(CsvReader::class, function() {
            return new CsvReader(new \RecursiveDirectoryIterator(public_path('home')));
-//            return new CsvReader(new RecursiveIteratorIterator(new \RecursiveDirectoryIterator(public_path('home'))));
         });
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Server;
 use App\Support\CsvReader;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ParseCsvFile extends Command
 {
@@ -24,7 +26,25 @@ class ParseCsvFile extends Command
     public function handle()
     {
         try {
-            app(CsvReader::class)->import();
+            $parsedData = app(CsvReader::class)->import();
+            foreach ($parsedData as $data) {
+                collect($data)->map(function ($csvData) {
+                    Log::info('Retrieved the data', $csvData);
+                    $server = Server::whereIn('hostname', [$csvData['hostname']])->first();
+                    if (!$server) {
+                        return false;
+                    }
+                    unset($csvData['hostname']);
+                    unset($csvData['ipaddress']);
+                    $value = $server->addValues($csvData);
+                    $value->server->update([
+                        'server_time' => $value->created_at,
+                    ]);
+
+                    Log::info('Saved the exported Data');
+                });
+            }
+
             $this->info('Csv Parsed Successfully');
         } catch (\Exception $e) {
             $this->info($e->getMessage());
