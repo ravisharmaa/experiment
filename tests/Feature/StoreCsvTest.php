@@ -14,7 +14,7 @@ class StoreCsvTest extends TestCase
      * @param string $fileName
      * @param array  $data
      */
-    protected function prepareCsvData(string $fileName, array $data): void
+    protected function prepareData(string $fileName, array $data): void
     {
         $file = fopen(public_path("home/{$fileName}"), 'w');
         fputcsv($file, ['hostname', 'ipaddress', 'systemuptime', 'memtotal', 'memfree']);
@@ -35,13 +35,13 @@ class StoreCsvTest extends TestCase
             ['example.com', '1.1.1.1', '200days', '1452', '5223'],
         ];
 
-        $this->prepareCsvData('edelman/server_a.csv', $dataOfServerA);
+        $this->prepareData('edelman/server_a.csv', $dataOfServerA);
 
         $dataOfServerB = [
             ['server_b', '1.1.1.1', '205days', '1452', '5223'],
         ];
 
-        $this->prepareCsvData('javra/server_b.csv', $dataOfServerB);
+        $this->prepareData('javra/server_b.csv', $dataOfServerB);
 
         $serverA = factory(Server::class)->state('specific_host_for_csv')->create();
 
@@ -75,23 +75,29 @@ class StoreCsvTest extends TestCase
             ['example.com', '1.1.1.1', '200days', '1452', '5223'],
         ];
 
-        $this->prepareCsvData('orphan/server_orphan.csv', $orphanData);
-
-        $this->assertDatabaseMissing('values', $orphanData[0]);
+        $this->prepareData('edelman/server_orphan.csv', $orphanData);
 
         $dataOfExampleServer = [
             ['example.com', '1.1.1.1', '200days', '1452', '5223'],
         ];
 
-        $this->prepareCsvData('edelman/server_a.csv', $dataOfExampleServer);
+        $this->prepareData('edelman/server_a.csv', $dataOfExampleServer);
 
         $exampleServer = factory(Server::class)->state('specific_host_for_csv')->create();
 
         $this->artisan('parse:csv');
+
+        $this->assertDatabaseMissing('values', $orphanData[0]);
 
         $this->assertDatabaseHas('values', [
             'server_id' => $exampleServer->id,
             'memtotal' => $dataOfExampleServer[0][3],
         ]);
     }
+
+    /**
+     * @test
+     */
+
+
 }

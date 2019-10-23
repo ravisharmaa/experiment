@@ -22,7 +22,7 @@ class ValuesObserver
     public function created(Value $value)
     {
         $this->bakeThreshold($value);
-        $this->notifiable = $value->server->customers[0]->email; //$attribute->pivot->email;
+        $this->notifiable = $value->server->customer()->first()->email; //$attribute->pivot->email;
         $maxThreshold = resolve(MaxThreshold::class);
         $maxThreshold->attributesInspector = $this->thresholdAttributes;
         $maxThreshold->thresholdLimits = $this->thresholdLimits;
